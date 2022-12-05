@@ -34,6 +34,13 @@ class Button:
             self.rect.y = center_y - self.btn_size[1] * 2
     
         return (self.rect.x, self.rect.y)
+    
+    def check_event(self, mouse_pos):
+        if mouse_pos[0] >= self.rect.x and mouse_pos[0] <= self.rect.x + self.rect.width:
+                if mouse_pos[1] >= self.rect.y and mouse_pos[1] <= self.rect.y + self.rect.height:
+                    return True
+        else:
+            return False
         
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -45,12 +52,6 @@ def render_text(text, color, x, y, font, screen):
     rect.centery = y
     screen.blit(img, rect)
 
-def check_mouse_pos(mouse_pos, btn):
-    if mouse_pos[0] >= btn.rect.x and mouse_pos[0] <= btn.rect.x + btn.rect.width:
-            if mouse_pos[1] >= btn.rect.y and mouse_pos[1] <= btn.rect.y + btn.rect.height:
-                return True
-    else:
-        return False
     
 def main():
     SCREEN_SIZE = (550, 550)
@@ -100,18 +101,18 @@ def main():
         y = randrange(0, SCREEN_SIZE[1] - btn_no.rect.height)
         
         #Checking if mouse pos is inside of the button "no"
-        if check_mouse_pos(mouse_pos, btn_no):    
+        if btn_no.check_event(mouse_pos):    
             btn_no.rect.x = x
             btn_no.rect.y = y
         
         #Cheking click for win
-        if check_mouse_pos(mouse_pos, btn_yes) and mouse_click[0]:
+        if btn_yes.check_event(mouse_pos) and mouse_click[0]:
             pg.mixer.music.stop()
             pg.mixer.music.load("./src/music/accept_music.mp3")
             pg.mixer.music.play()
             won = True
             
-        if not check_mouse_pos(mouse_pos, btn_yes) and mouse_click[0] and not won:
+        if not btn_yes.check_event(mouse_pos) and mouse_click[0] and not won:
             wrong_click = pg.mixer.Sound("./src/music/wrong_click.mp3")
             wrong_click.play()
                    
